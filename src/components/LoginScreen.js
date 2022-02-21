@@ -1,6 +1,8 @@
 import React, {useEffect, useState, useContext} from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import * as Animatable from 'react-native-animatable';
+
 import { 
   View, 
   Text, 
@@ -13,8 +15,8 @@ import {
   ActivityIndicator
 } from 'react-native';
 
-import * as Animatable from 'react-native-animatable';
 
+import LoginData from './LoginData';
 
 const LoginScreen = ({navigation}) => {
   // const [ID , setID] = useState('');
@@ -54,27 +56,27 @@ const LoginScreen = ({navigation}) => {
   //   }
   // }
   
-  const loginData = {
-    name: 'Leon',
-    age: 18,
-    sex: 'male',
-    pw: '1234',
-    id: 'A123456789',
-    location :{
-      city: 'Taipei',
-      state: '松山',
-      country: 'Taiwan'
-    },
-    userAuth:{
-      level: 0
-    },
-    deviceAuth:{
-      camera:false,
-      photo:false,      
-    },
-    isPasswordValid:true,
-    isValidUser:true
-  }
+  // const loginData = {
+  //   name: 'Leon',
+  //   age: 18,
+  //   sex: 'male',
+  //   pw: '1234',
+  //   id: 'A123456789',
+  //   location :{
+  //     city: 'Taipei',
+  //     state: '松山',
+  //     country: 'Taiwan'
+  //   },
+  //   userAuth:{
+  //     level: 0
+  //   },
+  //   deviceAuth:{
+  //     camera:false,
+  //     photo:false,      
+  //   },
+  //   isPasswordValid:true,
+  //   isValidUser:true
+  // }
 
   useEffect(() => {
     setTimeout(() => {
@@ -88,8 +90,8 @@ const LoginScreen = ({navigation}) => {
 
   const saveData = () => {
     try{
-      AsyncStorage.setItem('@userID',loginData.id);
-      AsyncStorage.setItem('@userPassword',loginData.pw);
+      AsyncStorage.setItem('@userID',LoginData.id);
+      AsyncStorage.setItem('@userPassword',LoginData.pw);
       console.log('save data work');
     }catch(error){
       console.error('error');
