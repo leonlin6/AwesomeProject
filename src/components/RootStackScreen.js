@@ -12,7 +12,7 @@ const RootStack = createStackNavigator();
 
 const RootStackScreen = () => {
     return(
-        <RootStack.Navigator headerMode='none'>
+        <RootStack.Navigator headerShown={false}>
             {/* <RootStack.Screen name="Splash" component={SplashScreen}></RootStack.Screen> */}
             <RootStack.Screen name="Login" component={LoginScreen}></RootStack.Screen>
             {/* <RootStack.Screen name="Logout" component={LogoutScreen}></RootStack.Screen> */}

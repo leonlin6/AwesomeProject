@@ -15,33 +15,10 @@ import {
 
 
 const HomeScreen = ({navigation}) => {
-  const [ID , setID] = useState('');
-  const [password , setPassword] = useState('');
-
-  const [returnID , setReturnID] = useState('');
-  const [returnPassword , setReturnPassword] = useState('');
-
-  const [inputIDFocus, setInputIDFocus] = useState(false);
-  const [inputPasswordFocus, setInputPasswordFocus] = useState(false);
-
   const [passwordShow, setPasswordShow] = useState(false);
-
-  const IDWrapStyle = inputIDFocus? styles.inputWrapFocus : styles.inputWrap;
-  const passwordWrapStyle = inputPasswordFocus? styles.inputWrapFocus : styles.inputWrap;
-
   const {height} = Dimensions.get("screen");
   const height_logo = height * 0.28;
 
-  const data = {
-    name: 'Leon',
-    age: 18,
-    sex: 'male',
-    location :{
-      city: 'Taipei',
-      state: '松山',
-      country: 'Taiwan'
-    }
-  }
 
   const saveData = () => {
     try{
@@ -52,8 +29,9 @@ const HomeScreen = ({navigation}) => {
     }
   }
 
-  const onPressToLogin = () => {
-    navigation.navigate('Login');
+
+  const onPressToQR = () => {
+    navigation.navigate('QRScan');
   }
 
   const onPwIconPress = () => {
@@ -83,9 +61,9 @@ const HomeScreen = ({navigation}) => {
 
           <TouchableOpacity
             style={styles.loginBtn}
-            onPress={onPressToLogin}
+            onPress={onPressToQR}
           >
-            <Text style={{color:'#0f659d'}}>To Login Page</Text>
+            <Text style={{color:'#0f659d'}}>To QR Scan Page</Text>
             <Ionicons color='#0f659d' size={20} name="chevron-forward"></Ionicons>
           </TouchableOpacity>
         </View>

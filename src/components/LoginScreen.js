@@ -1,8 +1,8 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useState} from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as Animatable from 'react-native-animatable';
-
+import {connect} from 'react-redux';
 import { 
   View, 
   Text, 
@@ -16,15 +16,16 @@ import {
 } from 'react-native';
 
 
-import LoginData from './LoginData';
+import LoginData from '../APIs/LoginData';
+import {setLoginToken} from '../actions/index'
 
-const LoginScreen = ({navigation}) => {
+const LoginScreen = (props) => {
   // const [ID , setID] = useState('');
   // const [password , setPassword] = useState('');
-  const [userToken, setUserToken] = useState(null);
+  // const [userToken, setUserToken] = useState(null);
   const [data, setData] = useState({
     id: '',
-    password: '',
+    pw: '',
     check_textInputChange: false,
     secureTextEntry: true,
     isValidUser: true,
@@ -85,35 +86,64 @@ const LoginScreen = ({navigation}) => {
   }, [])
 
   useEffect(() => {
-    saveData();
+    // saveData();
   }, [])
 
-  const saveData = () => {
-    try{
-      AsyncStorage.setItem('@userID',LoginData.id);
-      AsyncStorage.setItem('@userPassword',LoginData.pw);
-      console.log('save data work');
-    }catch(error){
-      console.error('error');
-    }
-  }
+  useEffect (() => {
+    console.log('props.loginToken', props.loginToken);
+  },
+  [props.loginToken]
+
+  )
+
+  // const saveData = () => {
+  //   try{
+  //     AsyncStorage.setItem('@userID',LoginData.id);
+  //     AsyncStorage.setItem('@userPassword',LoginData.pw);
+  //     console.log('default save data work');
+  //   }catch(error){
+  //     console.error('error');
+  //   }
+  // }
 
   const onPressLogin = async () => {
     
     try{
-      const id = await AsyncStorage.getItem('@userID');
+      // const id = await AsyncStorage.getItem('@userID');
       // const pw = AsyncStorage.setItem('@userPassword');
-       console.log('data', data);
-      if(id !== data.id){
-        console.log('Accound ID:' , id);
-        console.log('No such accound ID');
-        await AsyncStorage.setItem('userToken', 'true');
+      let hasID = false;
+      let pwPass = false;
+      let ooo = null;
+      LoginData.forEach((item, index) => {
+        if(data.id === item.id){
+          hasID = true;
+          if(data.pw === item.pw){
+            pwPass = true;
+            ooo = item;
+          }
+        }
+      });
 
+      if(!hasID){
+        console.warn('No such account ID', item);
+      }else if(!pwPass){
+        console.warn('Wrong Password');
       }else{
-        console.log('Accound ID:' , id);
+        console.log('pass the certificat', );
+        setData(
+          {
+            ...data,
+            userToken:'administrator'
+          }
+        );
 
-        console.log('login work');
+        // setLoginToken({userToken:'administrator'});
+        props.setLoginToken(ooo);
+
+        // console.log('props.loginToken',props.loginToken);
+        // await AsyncStorage.setItem('@userToken', LoginData);
       }
+
     }catch(error){
 
     }
@@ -123,7 +153,7 @@ const LoginScreen = ({navigation}) => {
     // }else if(password !== data.password){
     //   console.warn('Wrong password');
     // }else{
-    //   navigation.navigate('QRScan', data);
+    //   props.navigation.navigate('QRScan', data);
     // }
   }
 
@@ -147,13 +177,13 @@ const LoginScreen = ({navigation}) => {
     if( val.trim().length >= 8 ) {
         setData({
             ...data,
-            password: val,
+            PeriodicWave: val,
             isPasswordValid: true
         });
     } else {
         setData({
             ...data,
-            password: val,
+            pw: val,
             isPasswordValid: false
         });
     }
@@ -363,4 +393,10 @@ const styles = StyleSheet.create({
   }
 });
 
-export default LoginScreen;
+const mapStateToProps = (state) => {  
+  return {
+      loginToken: state.loginToken
+  };
+}
+
+export default connect(mapStateToProps, {setLoginToken})(LoginScreen);
