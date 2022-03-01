@@ -14,7 +14,7 @@ import {
 
 
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = (props) => {
   const [passwordShow, setPasswordShow] = useState(false);
   const {height} = Dimensions.get("screen");
   const height_logo = height * 0.28;
@@ -31,7 +31,7 @@ const HomeScreen = ({navigation}) => {
 
 
   const onPressToQR = () => {
-    navigation.navigate('QRScan');
+    props.navigation.navigate('QRScan');
   }
 
   const onPwIconPress = () => {

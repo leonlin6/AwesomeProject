@@ -1,20 +1,21 @@
-import React, {useState} from 'react';
-import { View, Text, Image, ScrollView, TextInput, StyleSheet, TouchableOpacity, Linking , Button} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import { View, Text, Image, ScrollView, TextInput, StyleSheet, TouchableOpacity, Linking , Button, Dimensions} from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const QRScanScreen = ({route}) => {
+const QRScanScreen = ({route, navigation}) => {
+  const SCREEN_HEIGHT = Dimensions.get("window").height;
+  const SCREEN_WIDTH = Dimensions.get("window").width;
+
   const [QRCode, setQRCode] = useState('nothing QR now');
-
-  const onPress = () => {
-    console.log('press test work');
-  }
 
   const onSuccessLoad = (e) => {
     Linking.openURL(e.data).catch(err =>
       console.error('An error occured', err)
     );
   }
+
 
   const onPressShowRoute = () => {
     console.log(route.params);
@@ -23,43 +24,36 @@ const QRScanScreen = ({route}) => {
     setQRCode(e.data);
     console.log('e= ', e);
   }
-  
+
+  const backButton = () => {
+    navigation.goBack();
+  }
+
   return (
-    <ScrollView>
+    <View>
       <QRCodeScanner
-        cameraStyle={{height:250, marginBottom:50}}
-        topViewStyle={{height:250}}
-        bottomViewStyle={{height:150}}
+        cameraStyle={{height:SCREEN_HEIGHT, margin:0, padding:0}}
         // containerStyle={{height:200}}
         onRead={onSuccessLoad}
         flashMode={RNCamera.Constants.FlashMode.torch}
-        topContent={
-          <Text style={styles.centerText}>
-            Go to{' '}
-            <Text style={styles.textBold}>wikipedia.org/wiki/QR_code</Text> on
-            your computer and scan the QR code.
-          </Text>
-        }
-        bottomContent={
-          <TouchableOpacity 
-            style={styles.buttonTouchable}
-            onPress={onPress}>
-            <Text style={styles.buttonText}>OK. Got it!</Text>
-          </TouchableOpacity>
+        showMarker={true}
+        customMarker={
+          <View Style= {{flexDirection:'row'}}>
+            <View style={styles.rectangleContainer}>
+              <Ionicons name='ios-scan-outline' style={{color:'white'}} size={SCREEN_HEIGHT * 0.5}></Ionicons>
+            </View>
+          </View>
+
         }
       />
-      <View style={styles.body}>
-        <View style={styles.container}>
-          <Text style={styles.title}>{QRCode}</Text>
-          <Text style={styles.description}>DESCRIPTION</Text>
-        </View>
-      </View>
-      <View style={styles.btnArea}>
-        <Button 
-          onPress={onPressShowRoute}
-          title='show Route param'></Button>
-      </View>
-    </ScrollView>
+      <TouchableOpacity  onPress={backButton} style={{position:'absolute', top: 10, left: 10 ,borderRadius:100}}>
+        <Ionicons 
+          name = 'arrow-back-circle-sharp'
+          size={50} 
+          style={{color:'white'}}
+        ></Ionicons>
+      </TouchableOpacity>
+    </View>
   );
 }
 
@@ -83,7 +77,22 @@ const styles = StyleSheet.create({
     color: 'rgb(0,122,255)'
   },
   buttonTouchable: {
-    padding: 16
+    padding: 16,
+    backgroundColor: 'yellow'
+  },
+  screenOpacity:{
+    backgroundColor: 'black',
+    opacity: 0.6,
+    flex:1,
+    position: 'absolute'
+  },
+  rectangleContainer:{
+    backgroundColor: 'black',
+    opacity: 0.6,
+    justifyContent:'center',
+    alignItems: 'center',
+     height:683,
+     width:411,
   }
 });
 

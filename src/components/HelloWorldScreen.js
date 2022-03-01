@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { View, Text, Image, ScrollView, TextInput, StyleSheet, TouchableOpacity, Button} from 'react-native';
+import { View, Text, Image, ScrollView, TextInput, StyleSheet, FlatList, Button} from 'react-native';
 import { bikeSpotGet, getAuthorizationHeader } from '../APIs/APIs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -8,7 +8,6 @@ const HelloWorldScreen = () => {
   const [res, setRes] = useState([]);
 
   const onClickGetBikeSpot = async () => {
-    console.log('term', term);
     try{
       const response = await bikeSpotGet.get(`Taipei?$filter=contains(StationName/Zh_tw,'${term}')`, 
         {
@@ -24,14 +23,15 @@ const HelloWorldScreen = () => {
 
   const BikeSpotNames = () => {
     try{ 
-      let result = res.map((item) => {
-        console.log(item.StationAddress.Zh_tw);
-        return(<Text key={item.StationAddress.Zh_tw}>站牌名稱：{item.StationAddress.Zh_tw}</Text>);
-      })
-      return (<ScrollView>{result}</ScrollView>);
+      // let result = res.map((item) => {
+      //   return(<Text key={item.StationAddress.Zh_tw}>站牌名稱：{item.StationAddress.Zh_tw}</Text>);
+      // })
+      console.log('res', res);
+      // return (<FlatList data={res} renderItem={(item)=><Text key={item.StationAddress.Zh_tw}>站牌名稱：{item.StationAddress.Zh_tw}</Text>}></FlatList>);
+      return (<FlatList data={res} renderItem={({item})=><Text>站牌名稱：{item.StationAddress.Zh_tw}</Text>}></FlatList>);
 
     }catch(error){
-      console.log('data is undefined');
+      console.log('data is undefined', error);
       return <View></View>;
     }
 
