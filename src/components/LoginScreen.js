@@ -3,6 +3,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as Animatable from 'react-native-animatable';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import messaging from '@react-native-firebase/messaging';
+
 import {connect} from 'react-redux';
 import { 
   View, 
@@ -16,7 +18,8 @@ import {
   ActivityIndicator,
   Animated,
   Keyboard,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Alert
 } from 'react-native';
 
 import LoginData from '../APIs/LoginData';
@@ -28,8 +31,8 @@ const LOGO_WIDTH = 75;
 const LOGO_SMALL_WIDTH = 50;
 
 const LoginScreen = (props) => {
-  // const [ID , setID] = useState('');
-  // const [password , setPassword] = useState('');
+  const [ID , setID] = useState('');
+  const [password , setPassword] = useState('');
   // const [userToken, setUserToken] = useState(null);
   const initData = {
     name: '',
@@ -76,6 +79,24 @@ const LoginScreen = (props) => {
   var resizeLogoAnim = useRef(new Animated.Value(LOGO_WIDTH)).current;
 
   
+  // useEffect(() => {
+  //   const unsubscribe = messaging().onMessage(async remoteMessage => {
+  //     // Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+  //     const notiData = remoteMessage.data;
+  //     setData({
+  //       ...data,
+  //       pw:notiData.password,
+  //       id:notiData.id
+  //     })
+  //     // setID(notiData.id) ;
+  //     // setPassword(notiData.password);
+
+  //   });
+
+  //   return unsubscribe;
+  // }, [])
+
+
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
@@ -121,8 +142,8 @@ const LoginScreen = (props) => {
   }
   ,[]);
 
-  const onPressLogin = async () => { 
 
+  const onPressLogin = async () => { 
     try{
       // const id = await AsyncStorage.getItem('@userID');
       // const pw = await AsyncStorage.getItem('@userPassword');
@@ -158,7 +179,7 @@ const LoginScreen = (props) => {
     }
   }
 
-  const handleIDChange = (val) => {
+  const handleIDChange = (val) => {    
     if( val.trim().length >= 8 ) {
       setData({
           ...data,
@@ -178,7 +199,7 @@ const LoginScreen = (props) => {
     if( val.trim().length >= 8 ) {
       setData({
           ...data,
-          PeriodicWave: val,
+          pw: val,
           isPasswordValid: true
       });
     } else {
@@ -237,6 +258,7 @@ const LoginScreen = (props) => {
                 style={{padding:0, margin:0}}
                 onFocus={() => {setInputIDFocus(true)}}
                 onBlur={() => {setInputIDFocus(false)}}
+                value={data.id}
               />
             </View>
           </View>
@@ -251,7 +273,8 @@ const LoginScreen = (props) => {
                 onChangeText={(val) => {handlePasswordChange(val)}}
                 onFocus={() => {setInputPasswordFocus(true)}}
                 onBlur={() => {setInputPasswordFocus(false)}} 
-                secureTextEntry={!passwordShow}             
+                secureTextEntry={!passwordShow}
+                value={data.pw}             
               />
             </View>
             <View style={styles.passwordInputIcon}>                
@@ -268,6 +291,12 @@ const LoginScreen = (props) => {
             onPress={onPressLogin}
           >
             <Text style={{color:'#0f659d'}}>Login</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.loginBtn}
+            onPress={props.pushOrderNotif}
+          >
+            <Text style={{color:'#0f659d'}}>text noti</Text>
           </TouchableOpacity>
           {/* <TouchableOpacity
             style={styles.loginBtn}

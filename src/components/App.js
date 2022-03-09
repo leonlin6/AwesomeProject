@@ -3,16 +3,20 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 // import { AuthContext } from './components/context';
 import {connect} from 'react-redux';
 
+import NotifService from '../utils/NotifService';
 import { NavigationContainer, TabActions, useFocusEffect } from '@react-navigation/native';
 // import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import messaging from '@react-native-firebase/messaging';
 
+import RootStackScreen from './RootStackScreen';
+import NotificationScreen from './NotificationScreen';
 import HelloWorldScreen from './HelloWorldScreen';
 import HomeScreen from './HomeScreen';
 import QRScanScreen from './QRScanScreen';
-import RootStackScreen from './RootStackScreen';
+import SignatureScreen from './SignatureScreen';
 import Logout from './Logout';
 
 
@@ -29,7 +33,35 @@ const App = (props) => {
     // });
 
     const [showAuthDraw, setShowAuthDraw] = useState(false);
-    
+    const [notif, setNotif] = useState(null);
+
+    useEffect(() => {
+      notif || setNotif(NotifService);
+      const asyncFunc = async () => {
+        const hasOrderChannel = await notif.getChannelExists(
+          'orderChannel'
+        );
+        hasOrderChannel || notif.createChannel('orderChannel');
+      };
+      notif && asyncFunc();
+    }, [notif]);
+
+    useEffect(() => {
+      const unsubscribe = messaging().onMessage(async remoteMessage => {
+        NotifService.localNotif(remoteMessage);  
+        console.log('noti work');
+
+      });
+  
+      return unsubscribe;
+    }, [])
+
+
+    const pushOrderNotif = () => {
+      console.log('notificate work');
+      NotifService.localNotif('orderChannel');
+    };
+
     useEffect(  () => {
         try{
           if(props.loginToken !== null){
@@ -120,14 +152,28 @@ const App = (props) => {
       )
     }
 
+    const NN = () => {
+      return (
+        <NotificationScreen pushOrderNotif={pushOrderNotif}/>
+      );
+    }
+
     const DrawerContainer = () => {
       return(
         <Drawer.Navigator initialRouteName="Home">
           <Drawer.Screen name='Home' component={HomeScreen} options={{drawerIcon: ({focused, size}) => {return <Ionicons name='home' size={25}></Ionicons>}}}></Drawer.Screen>
+          {showAuthDraw === true ? ( 
+          <Drawer.Screen name='HelloWorld' component={HelloWorldScreen} options={{drawerIcon: ({focused, size}) => {return <Ionicons name='paw' size={25}></Ionicons>}}}></Drawer.Screen>
+            ) : null
+          }
           {showAuthDraw === true ? (
-            <Drawer.Screen name='HelloWorld' component={HelloWorldScreen} options={{drawerIcon: ({focused, size}) => {return <Ionicons name='paw' size={25}></Ionicons>}}}></Drawer.Screen>
+          <Drawer.Screen name='Notification' component={NN} options={{drawerIcon: ({focused, size}) => {return <Ionicons name='ios-notifications' size={25}></Ionicons>}}}></Drawer.Screen>
             ) : null
           }  
+          {showAuthDraw === true ? (
+          <Drawer.Screen name='Signature'  component={SignatureScreen} options={{drawerIcon: ({focused, size}) => {return <Ionicons name='ios-create-sharp' size={25}></Ionicons>}}}></Drawer.Screen>
+            ) : null
+          }    
           <Drawer.Screen name='Logout' component={Logout} options={{drawerIcon: ({focused, size}) => {return <Ionicons name='log-out' size={25}></Ionicons>}}}></Drawer.Screen>
         </Drawer.Navigator>
       );

@@ -1,36 +1,26 @@
-import React, {useState} from 'react';
-import { View, Text, Image, ScrollView, TextInput, StyleSheet, FlatList, Button} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import { View, Text, Image, ScrollView, TextInput, StyleSheet, FlatList, Button, Alert} from 'react-native';
 import { bikeSpotGet, getAuthorizationHeader } from '../APIs/APIs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import messaging from '@react-native-firebase/messaging';
 
-const HelloWorldScreen = () => {
+
+const NotificationScreen = (props) => {
   const [term, setTerm] = useState('');
   const [res, setRes] = useState([]);
-  let promiseFlag = false;
+
+  useEffect(() => {
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      console.log('esst');
+      console.log('getToken', await messaging().getToken);
+      console.log('getAPNSToken', await  messaging().getAPNSToken);
+      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
 
 
-  const promise = new Promise((resolve, rejected) => {
-    if(promiseFlag){
-      resolve();
-    }else{
 
-    }
-  })
-
-
-  const onClickGetBikeSpot = async () => {
-    try{
-      const response = await bikeSpotGet.get(`Taipei?$filter=contains(StationName/Zh_tw,'${term}')`, 
-        {
-          headers:getAuthorizationHeader()
-        }
-      );
-      setRes( response.data );
-    }catch(error){
-      console.log('error');
-    }
-  }
-
+    return unsubscribe;
+  }, []);
 
   const BikeSpotNames = () => {
     try{ 
@@ -47,7 +37,17 @@ const HelloWorldScreen = () => {
     }
 
   }
+  
+  // const pushOrderNotif = () => {
+  //   console.log('notificate work');
+  //   NotifService.localNotif('orderChannel');
+  // };
 
+
+  const test = async () => {
+    console.log('getToken', await messaging().getToken());
+    console.log('getAPNSToken', await  messaging().getAPNSToken());
+  }
   return (
     <View style={styles.container}>
       <View style={styles.info}>
@@ -64,8 +64,12 @@ const HelloWorldScreen = () => {
         <View style={styles.buttonArea}>
           <Button
             title='submit'         
-            onPress={onClickGetBikeSpot}>
-          </Button>       
+            onPress={props.pushOrderNotif}>
+          </Button>
+          <Button
+            title='test'         
+            onPress={test}>
+          </Button>              
         </View>
       </View>
     </View>
@@ -98,4 +102,4 @@ const styles = StyleSheet.create({
 
 
 
-export default HelloWorldScreen;
+export default NotificationScreen;

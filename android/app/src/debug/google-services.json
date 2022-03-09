@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "97132395241",
+    "project_id": "sb-ep2-practice",
+    "storage_bucket": "sb-ep2-practice.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:97132395241:android:57a224d4058b9dea6f0e78",
+        "android_client_info": {
+          "package_name": "com.awesomeproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "97132395241-0f0176os1gmulgqmgj3raua7ciok8ifc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCshi98Klb0T1zsZNUnKSNUcvRsIrJ2cdw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "97132395241-0f0176os1gmulgqmgj3raua7ciok8ifc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
