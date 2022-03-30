@@ -3,6 +3,7 @@ import {View, Text, ActivityIndicator, StyleSheet} from 'react-native';
 import {connect} from 'react-redux';
 import {setLoginToken} from '../actions/index'
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { NavigationContainer } from '@react-navigation/native';
 
 
 const Logout = (props) => {
@@ -15,6 +16,7 @@ const Logout = (props) => {
     useEffect(()=>{
       return () => {
         AsyncStorage.removeItem('@userToken');
+
       }
     },[]);
 

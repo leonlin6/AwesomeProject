@@ -240,7 +240,7 @@ const LoginScreen = (props) => {
         <Animatable.View
           animation="lightSpeedIn"
           style={styles.logoTextWrap}>
-          <Text style={styles.logoText}>Snowbridge</Text>
+          <Text style={styles.logoText}>Awsome Snowbridge</Text>
         </Animatable.View>
       </View>
       <Animatable.View 

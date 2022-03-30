@@ -129,6 +129,14 @@ def nativeArchitectures = project.getProperties().get("reactNativeDebugArchitect
 android {
 
     signingConfigs {
+            release {
+                if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
+                    storeFile file(MYAPP_RELEASE_STORE_FILE)
+                    storePassword MYAPP_RELEASE_STORE_PASSWORD
+                    keyAlias MYAPP_RELEASE_KEY_ALIAS
+                    keyPassword MYAPP_RELEASE_KEY_PASSWORD
+                }
+            }
             debug {
                 storeFile file('debug.keystore')
                 storePassword 'android'
@@ -148,7 +156,7 @@ android {
             release {
                 // Caution! In production, you need to generate your own keystore file.
                 // see https://reactnative.dev/docs/signed-apk-android.
-                signingConfig signingConfigs.debug
+                signingConfig signingConfigs.release
                 minifyEnabled enableProguardInReleaseBuilds
                 proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             }
@@ -192,19 +200,26 @@ android {
 }
 
 dependencies {
-    implementation platform('com.google.firebase:firebase-bom:29.1.0')
-    implementation platform('com.google.firebase:firebase-core:16.0.0')
+    implementation "com.android.support:appcompat-v7:27.1.1"
+
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation "org.webkit:android-jsc:+"
+    // notification firebase
+    implementation platform('com.google.firebase:firebase-bom:29.3.0')
+    implementation platform('com.google.firebase:firebase-core:16.0.0')
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-firestore'
-
-
-    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.google.firebase:firebase-analytics'
+    //finger print scanner
+    implementation project(':react-native-fingerprint-scanner')
 
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+
+    //file store
+    implementation project(':react-native-fs')
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.fbjni'
     }

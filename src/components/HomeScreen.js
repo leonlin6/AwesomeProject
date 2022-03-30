@@ -9,8 +9,11 @@ import {
   TextInput, 
   StyleSheet, 
   TouchableOpacity,
-  Dimensions
+  Dimensions,
+  Linking,
+  Button
 } from 'react-native';
+import NativeLinkingManager from 'react-native/Libraries/Linking/NativeLinkingManager';
 
 
 
@@ -66,6 +69,10 @@ const HomeScreen = (props) => {
             <Text style={{color:'#0f659d'}}>To QR Scan Page</Text>
             <Ionicons color='#0f659d' size={20} name="chevron-forward"></Ionicons>
           </TouchableOpacity>
+          <Button
+            title='jump to Deep Link'         
+            onPress={() => {Linking.openURL('mychat://chat')}}>
+          </Button>
         </View>
       </View>
 

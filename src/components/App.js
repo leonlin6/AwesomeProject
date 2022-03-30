@@ -17,8 +17,25 @@ import HelloWorldScreen from './HelloWorldScreen';
 import HomeScreen from './HomeScreen';
 import QRScanScreen from './QRScanScreen';
 import SignatureScreen from './SignatureScreen';
+import DeepLinkScreen from './DeepLinkScreen'
+import FingerprintScreen from './FingerprintScreen'
+
 import Logout from './Logout';
 
+// using for Deep Link
+const config = {
+  initialRouteName: 'DeepLink',
+  screens:{
+    DeepLink: {
+      path:'chat/:id/:name'
+    }
+  }
+}
+
+const linking = {
+  prefixes: ['mychat://'],
+  config
+};
 
 const App = (props) => {
     // const Tab = createBottomTabNavigator();
@@ -48,14 +65,10 @@ const App = (props) => {
 
     useEffect(() => {
       const unsubscribe = messaging().onMessage(async remoteMessage => {
-        NotifService.localNotif(remoteMessage);  
-        console.log('noti work');
-
+        NotifService.localNotif(remoteMessage); 
       });
-  
       return unsubscribe;
     }, [])
-
 
     const pushOrderNotif = () => {
       console.log('notificate work');
@@ -162,10 +175,12 @@ const App = (props) => {
       return(
         <Drawer.Navigator initialRouteName="Home">
           <Drawer.Screen name='Home' component={HomeScreen} options={{drawerIcon: ({focused, size}) => {return <Ionicons name='home' size={25}></Ionicons>}}}></Drawer.Screen>
-          {showAuthDraw === true ? ( 
+          {/* <Drawer.Screen name='Fingerprint' component={FingerprintScreen} options={{drawerIcon: ({focused, size}) => {return <Ionicons name='finger-print' size={25}></Ionicons>}}}></Drawer.Screen> */}
+          
+          {/* {showAuthDraw === true ? ( 
           <Drawer.Screen name='HelloWorld' component={HelloWorldScreen} options={{drawerIcon: ({focused, size}) => {return <Ionicons name='paw' size={25}></Ionicons>}}}></Drawer.Screen>
             ) : null
-          }
+          } */}
           {showAuthDraw === true ? (
           <Drawer.Screen name='Notification' component={NN} options={{drawerIcon: ({focused, size}) => {return <Ionicons name='ios-notifications' size={25}></Ionicons>}}}></Drawer.Screen>
             ) : null
@@ -173,7 +188,9 @@ const App = (props) => {
           {showAuthDraw === true ? (
           <Drawer.Screen name='Signature'  component={SignatureScreen} options={{drawerIcon: ({focused, size}) => {return <Ionicons name='ios-create-sharp' size={25}></Ionicons>}}}></Drawer.Screen>
             ) : null
-          }    
+          }   
+          {/* <Drawer.Screen name='DeepLink'  component={DeepLinkScreen} options={{drawerIcon: ({focused, size}) => {return <Ionicons name='ios-create-sharp' size={25}></Ionicons>}}}></Drawer.Screen> */}
+
           <Drawer.Screen name='Logout' component={Logout} options={{drawerIcon: ({focused, size}) => {return <Ionicons name='log-out' size={25}></Ionicons>}}}></Drawer.Screen>
         </Drawer.Navigator>
       );
@@ -181,9 +198,10 @@ const App = (props) => {
 
     return (
         // <AuthContext.Provider value={loginState}>        
-          <NavigationContainer>  
+          <NavigationContainer linking={linking}>  
             <Stack.Navigator>
-              {props.loginToken !== null ? 
+            {/* <Stack.Screen name='DrawerCotainer' component={DrawerContainer} options={{headerShown: false}}></Stack.Screen> */}
+               {props.loginToken !== null ? 
                 (<Stack.Screen name='DrawerCotainer' component={DrawerContainer} options={{headerShown: false}}></Stack.Screen>) : 
                 (<Stack.Screen name='RootStackScreen' component={RootStackScreen} options={{headerShown: false}}></Stack.Screen>)
               }              
@@ -202,9 +220,12 @@ const App = (props) => {
                   headerShown: false,
                   headerTintColor: 'red',
 
-                  drawerIcon: ({focused, size}) => {return <Ionicons name='scan-sharp' size={25}></Ionicons>}
+                  // drawerIcon: ({focused, size}) => {return <Ionicons name='scan-sharp' size={25}></Ionicons>}
                 })}                
               ></Stack.Screen> 
+                {/* (<Stack.Screen name='HelloWordScreen' component={HelloWordScreen} options={{headerShown: false}}></Stack.Screen>) */}
+                <Stack.Screen name='DeepLink'  component={DeepLinkScreen} ></Stack.Screen>
+
             </Stack.Navigator>                
           </NavigationContainer>
         // </AuthContext.Provider>
